@@ -72,7 +72,7 @@ describe('AuthGuard Integration', () => {
     await request(app.getHttpServer()).get('/').expect(403);
   });
 
-  it('should return 403 for protected query (supertest)', async () => {
+  it('should return error for protected query (supertest)', async () => {
     const query = `
       query {
         protectedQuery
@@ -82,25 +82,9 @@ describe('AuthGuard Integration', () => {
     await request(app.getHttpServer())
       .post('/graphql')
       .send({ query })
-      .expect(403); // Expect Unauthorized response
-  });
-
-  // eliminating supertest as the problem by testing with fetch
-  it('should return 403 for protected query (fetch)', async () => {
-    const payload = {
-      operationName: null,
-      variables: {},
-      query: '{protectedQuery}',
-    };
-
-    await fetch(`http://localhost:${PORT}/graphql`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    }).then((res) => {
-      expect(res.status).toBe(403);
-    });
+      .expect(200) // Because it's graphql, it will return 200, but with an error
+      .expect((res) => {
+        expect(res.body.errors).toBeDefined();
+      });
   });
 });

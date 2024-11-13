@@ -1,7 +1,3 @@
-# Nest guard testing issue
+# Nest guard testing
 
-I am struggling to get a guard to correctly fire for a graphql resolver.
-
-There is one test suite in this project which shows a guard being applied to both a rest controller and a gql resolver. The guard correctly fires for the rest controller but not the gql resolver. If I run this as a server and use the gql playground I do get the 403 so it's something about the test setup specifically but I can't figure it out.
-
-Any ideas?
+Originally I made this to track down what I thought was a software bug but it turned out to be a human bug so now this is just a compact demo of one way to do integration testing for a nestjs guard.
