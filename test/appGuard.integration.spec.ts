@@ -24,7 +24,7 @@ class AlwaysFalseAuthGuard implements CanActivate {
 class TestResolver {
   @Query(() => String)
   protectedQuery() {
-    return 'protected';
+    return 'you should not see this';
   }
 }
 
@@ -32,13 +32,13 @@ class TestResolver {
 class TestController {
   @Get()
   protectedQuery() {
-    return 'public';
+    return 'you should not see this';
   }
 }
 
-const PORT = 27850;
+const PORT = 27860;
 
-describe('AuthGuard Integration', () => {
+describe('Application AuthGuard Integration', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -72,7 +72,7 @@ describe('AuthGuard Integration', () => {
     await request(app.getHttpServer()).get('/').expect(403);
   });
 
-  it('should return error for protected query (supertest)', async () => {
+  it('should return error for protected query', async () => {
     const query = `
       query {
         protectedQuery
@@ -84,6 +84,7 @@ describe('AuthGuard Integration', () => {
       .send({ query })
       .expect(200) // Because it's graphql, it will return 200, but with an error
       .expect((res) => {
+        console.log(res.body);
         expect(res.body.errors).toBeDefined();
       });
   });
