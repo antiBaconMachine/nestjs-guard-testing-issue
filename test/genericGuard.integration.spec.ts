@@ -11,30 +11,31 @@ import {
 import { Resolver, Query } from '@nestjs/graphql';
 import * as request from 'supertest';
 import { APP_GUARD } from '@nestjs/core';
+import { TestModule } from '../src/testModule';
 
-@Injectable()
-class AlwaysFalseAuthGuard implements CanActivate {
-  canActivate(): boolean {
-    console.log('AlwaysFalseAuthGuard called');
-    return false;
-  }
-}
+// @Injectable()
+// class AlwaysFalseAuthGuard implements CanActivate {
+//   canActivate(): boolean {
+//     console.log('AlwaysFalseAuthGuard called');
+//     return false;
+//   }
+// }
 
-@Resolver()
-class TestResolver {
-  @Query(() => String)
-  protectedQuery() {
-    return 'protected';
-  }
-}
+// @Resolver()
+// class TestResolver {
+//   @Query(() => String)
+//   protectedQuery() {
+//     return 'protected';
+//   }
+// }
 
-@Controller()
-class TestController {
-  @Get()
-  protectedQuery() {
-    return 'public';
-  }
-}
+// @Controller()
+// class TestController {
+//   @Get()
+//   protectedQuery() {
+//     return 'public';
+//   }
+// }
 
 const PORT = 27850;
 
@@ -43,20 +44,7 @@ describe('AuthGuard Integration', () => {
 
   beforeAll(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [
-        GraphQLModule.forRoot<ApolloDriverConfig>({
-          driver: ApolloDriver,
-          autoSchemaFile: true,
-        }),
-      ],
-      controllers: [TestController],
-      providers: [
-        TestResolver,
-        {
-          provide: APP_GUARD,
-          useClass: AlwaysFalseAuthGuard,
-        },
-      ],
+      imports: [TestModule],
     }).compile();
 
     app = moduleRef.createNestApplication();
